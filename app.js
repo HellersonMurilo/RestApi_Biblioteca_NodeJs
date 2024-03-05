@@ -1,20 +1,27 @@
 const express = require('express')
-const PORT = 3000;
+const mongoDb = require("mongoose");
 const bodyParser = require('body-parser');
-var app = express();
+const app = express();
+require("dotenv").config()
+const PORT = 3000;
 
-//PUXANDO A ROTA
-const livros = require('./src/routes/infoLivrosRoutes')
+//importando a routes
+const routes = require('./src/routes/index.js')
 
 // Middleware para parsear o corpo da requisição como JSON
 app.use(bodyParser.json());
 
-//get
-app.use('/biblioteca', livros)
+app.use(routes)
 
-//post
-app.use('biblioteca', livros)
-
-app.listen(PORT, () => {
-    console.log(`Para acessar, clique aqui: http://localhost:${PORT}`);
+//CONEXAO com o banco de dados
+mongoDb.connect(process.env.MONGO_HOST,).then(result => {
+    app.listen(PORT, () => {
+        console.log(`Para acessar, clique aqui: http://localhost:${PORT}`);
+    })
 })
+    .catch(
+        err => {
+            console.log(err);
+        }
+    )
+

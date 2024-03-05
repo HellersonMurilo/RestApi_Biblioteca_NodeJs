@@ -1,21 +1,20 @@
-exports.verlivros = (req, res) => {
-    res.status(200).json({
-        livros: "OK"
-    })
-}
+class LibraryController {
 
-exports.salvarlivros = (req, res) => {
-    // Obter os dados do corpo da requisição
-    var { titulo, nome_autor, ano_lancamento, descricao } = req.body;
+    salvarLivro(req, res) {
+        const { title, description, author } = req.body;
 
-    // VALIDAÇÃO DE CONTEUDO
-    if (!titulo || !nome_autor || !ano_lancamento || !descricao) {
-        res.status(400).send("Todos os campos devem ser preenchidos");
-    } else {
-        // Lógica para salvar os dados no banco de dados ou realizar outras operações
-        // Exemplo: salvarLivroNoBancoDeDados(titulo, nome_autor, ano_lancamento, descricao);
+        res.status(200).json({
+            registered: "Livro cadastrado com Sucesso",
+            title: title,
+            description: description,
+            author: author
+        });
+    }
 
-        // Responder à requisição com uma mensagem ou status
-        res.status(200).send("Livro salvo com sucesso");
+    verLivros(req, res) {
+        res.send("Livro TALLL")
     }
 }
+
+// exportando o controller da classe library
+module.exports = LibraryController;
