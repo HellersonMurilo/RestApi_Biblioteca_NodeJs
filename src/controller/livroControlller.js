@@ -1,18 +1,33 @@
+const LibraryModel = require('../models/Schema')
+
 class LibraryController {
 
-    salvarLivro(req, res) {
-        const { title, description, author } = req.body;
+    async salvarLivro(req, res) {
+        try {
+            if (!req.body.title || !req.body.description || !req.body.author || !req.body.launch) {
+                res.status(400).json({
+                    error: "Por favor preencher todos os campos corretamente!"
+                })
+            }
+            const newLibrary = new LibraryModel(req.body)
 
-        res.status(200).json({
-            registered: "Livro cadastrado com Sucesso",
-            title: title,
-            description: description,
-            author: author
-        });
+            //salvar o livro no banco de dados
+            const newBook = await newLibrary.save();
+            res.status(201).json("Livro cadastrado com sucesso!")
+        } catch (err) {
+            res.status(400).json({ erro: err.message });
+        }
     }
 
-    verLivros(req, res) {
-        res.send("Livro TALLL")
+    async verLivros(req, res) {
+        try {
+            const books = await LibraryModel.find();
+            res.status(200).json({
+                books
+            })
+        } catch (error) {
+            res.status(500).json("Erro ao listar os livros")
+        }
     }
 }
 
