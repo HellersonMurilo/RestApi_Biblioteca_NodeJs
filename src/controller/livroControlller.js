@@ -15,7 +15,13 @@ class LibraryController {
             const newBook = await newLibrary.save();
             res.status(201).json("Livro cadastrado com sucesso!")
         } catch (err) {
-            res.status(400).json({ erro: err.message });
+            if (err.code === 11000 && err.keyPattern && err.keyPattern.title) {
+                // O erro 11000 indica violação de índice único (duplicação)
+                res.status(400).json({ err: 'Um livro com este título já existe.' });
+            } else {
+                res.status(400).json({ err: err.message });
+            }
+
         }
     }
 
